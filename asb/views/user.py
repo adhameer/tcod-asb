@@ -81,6 +81,11 @@ class LoginForm(asb.forms.CSRFTokenForm):
                 'You have been banned by {0} for the following reason: {1}'
                 .format(trainer.ban.banned_by.name, trainer.ban.reason)
             )
+        elif trainer.is_npc():
+            raise wtforms.validators.ValidationError(
+                'Hey! Are you trying to impersonate {0}?!'
+                .format(trainer.name)
+            )
 
     def validate_password(form, field):
         """If we got a valid user, check their password against the password
@@ -89,7 +94,7 @@ class LoginForm(asb.forms.CSRFTokenForm):
 
         trainer = form.username.trainer
 
-        if trainer is None:
+        if trainer is None or trainer.is_npc():
             # The username field will raise an error; there's no sensible
             # second error to be raised here
             return None
