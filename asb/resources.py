@@ -124,6 +124,10 @@ class TrainerIndex(IDRedirectResource):
     __name__ = 'trainers'
     table = db.Trainer
 
+class NPCIndex(IDRedirectResource):
+    __name__ = 'npcs'
+    table = db.Trainer
+
 class PokemonIndex(IDRedirectResource):
     __name__ = 'pokemon'
     table = db.Pokemon
@@ -218,6 +222,7 @@ def get_root(request):
 
     root = Root({
         'trainers': TrainerIndex(),
+        'npcs': NPCIndex(),
         'pokemon': PokemonIndex(),
         'battles': BattleIndex(),
         'news': NewsIndex(),

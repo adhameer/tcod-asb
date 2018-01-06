@@ -18,12 +18,18 @@ following reason: ${trainer.ban.reason}</strong></p>
 <hr>
 % endif
 
+% if trainer.is_npc():
+<p>${trainer.name} is an NPC and not a real trainer! :O</p>
+% endif
+
 <dl>
+    % if not trainer.is_npc():
     <dt>Forum profile</dt>
     <dd><a href="${profile_link}">Here</a></dd>
 
     <dt>Money</dt>
     <dd>$${trainer.money}</dd>
+    % endif
 
     <dt>Pokémon count</dt>
     <dd>${len(trainer.squad) + len(trainer.pc)}</dd>

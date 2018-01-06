@@ -8,6 +8,11 @@
 % for lot in trade.lots:
     % if request.has_permission('trade.lot.view', lot):
         % if lot.sender == request.user:
+            % if lot.recipient.is_npc():
+                <p>Note: ${lot.recipient.name} is an NPC and can't accept or
+                reject your trade. But you can try anyway!</p>
+            % endif
+
             % if lot.state == 'draft':
                 <h1>Confirm your gift</h1>
             % else:

@@ -892,6 +892,19 @@ class Pokemon(PlayerTable):
     )
 
     @hybrid_method
+    def is_npc(self):
+        """Check whether or not this Pokémon belongs to an NPC."""
+
+        return self.trainer.is_npc()
+
+    @is_npc.expression
+    def is_npc(class_):
+        """Return the corresponding SQLAlchemy expression to check whether this
+        Pokémon belongs to an NPC."""
+
+        return class_.trainer.has(Trainer.is_npc())
+
+    @hybrid_method
     def is_active(self, check_trainer=True):
         """Check whether or not this Pokémon is "active", i.e. it should be
         displayed wherever Pokémon are displayed.
@@ -1256,10 +1269,23 @@ class Trainer(PlayerTable):
         return pokemon_exist
 
     @hybrid_method
+    def is_npc(self):
+        """Return whether or not this trainer is an NPC."""
+
+        return any(role.identifier == "npc" for role in self.roles)
+
+    @is_npc.expression
+    def is_npc(class_):
+        """Return the corresponding SQLAlchemy expression to determine whether
+        this trainer is an NPC."""
+
+        return class_.roles.any(Role.identifier == "npc")
+
+    @hybrid_method
     def is_active(self):
         """Return whether this trainer is currently able to play ASB."""
 
-        return self.is_validated and self.ban is None
+        return self.is_validated and self.ban is None and not self.is_npc()
 
     @is_active.expression
     def is_active(class_):
@@ -1267,7 +1293,7 @@ class Trainer(PlayerTable):
         this trainer is active.
         """
 
-        return and_(class_.is_validated, ~class_.ban.has())
+        return and_(class_.is_validated, ~class_.ban.has(), ~class_.is_npc())
 
     @property
     def pc(self):

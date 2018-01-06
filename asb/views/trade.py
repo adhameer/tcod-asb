@@ -189,6 +189,7 @@ def start_trade_process(context, request):
         'state': 'build',
         'recipient': form.recipient.id,
         'recipient_name': form.recipient.name,
+        'recipient_is_npc': form.recipient.is_npc(),
         'contents': form.contents.data
     }
 

@@ -8,6 +8,11 @@
 
 <h1>Trade with ${trade_info['recipient_name']}</h1>
 
+% if trade_info['recipient_is_npc']:
+    <p>Note: ${trade_info['recipient_name']} is an NPC and can't accept or
+    reject your trade. But you can try anyway!</p>
+% endif
+
 <p>Anything you include will be taken from your account immediately, and
 returned if the trade is turned down or cancelled.</p>
 
